@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Absensi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen w-screen bg-gray-900 relative flex items-center justify-center">
+  <!-- Background -->
+  <div class="absolute inset-0">
+    <img src="imigrasi.jpg" alt="Background" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-black/40"></div> <!-- overlay gelap -->
+  </div>
+
+  <!-- Card Login -->
+  <div class="relative z-10 w-full max-w-sm p-8 rounded-2xl shadow-lg bg-white/20 backdrop-blur-md border border-white/30 animate-fadeIn">
+    
+    <!-- Logo -->
+    <div class="flex justify-center mb-4">
+      <img src="logo imigrasi.png" alt="Logo" class="h-16 w-16 rounded-full shadow-lg border border-white/50">
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-3xl font-bold text-center text-white mb-6 drop-shadow">
+      Login Admin
+    </h1>
+
+    <!-- Username -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-white">Username</label>
+      <input id="username" type="text" 
+             class="mt-1 w-full border border-white/40 bg-white/20 backdrop-blur-sm text-white placeholder-white/60 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none" 
+             placeholder="Masukkan username">
+    </div>
+
+    <!-- Password -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-white">Password</label>
+      <input id="password" type="password" 
+             class="mt-1 w-full border border-white/40 bg-white/20 backdrop-blur-sm text-white placeholder-white/60 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none" 
+             placeholder="Masukkan password">
+    </div>
+
+    <!-- Button -->
+    <button id="loginBtn" 
+            class="w-full bg-blue-600/90 hover:bg-blue-700 text-white font-semibold rounded-lg py-2 shadow-lg transition">
+      Login
+    </button>
+
+    <!-- Error -->
+    <p id="errorMsg" class="mt-4 text-sm text-red-200 text-center hidden">
+      Username atau password salah!
+    </p>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
+    const errorMsg = document.getElementById("errorMsg");
+
+    // Akun default
+    const adminUser = "admin";
+    const adminPass = "123";
+
+    loginBtn.addEventListener("click", () => {
+      if (username.value === adminUser && password.value === adminPass) {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "tes.html";
+      } else {
+        errorMsg.classList.remove("hidden");
+      }
+    });
+  </script>
+
+  <!-- Animasi Tailwind -->
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.8s ease-out;
+    }
+  </style>
+</body>
+</html>

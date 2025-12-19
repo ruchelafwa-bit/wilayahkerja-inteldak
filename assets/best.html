@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Intelijen - Kepulauan Riau</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        header, nav, main, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+
+        .transition-transform {
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .scale-105:hover {
+            transform: scale(1.05);
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .pulse-slow {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* ANIMASI KECAMATAN SUPER KEREN */
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg);
+            }
+            50% {
+                transform: scale(1.05) rotate(3deg);
+            }
+            70% {
+                transform: scale(0.9) rotate(-3deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes flipIn {
+            from {
+                opacity: 0;
+                transform: perspective(400px) rotateY(-90deg);
+            }
+            to {
+                opacity: 1;
+                transform: perspective(400px) rotateY(0deg);
+            }
+        }
+
+        .animate-district {
+            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .animate-district:nth-child(1) { animation-delay: 0s; }
+        .animate-district:nth-child(2) { animation-delay: 0.1s; }
+        .animate-district:nth-child(3) { animation-delay: 0.2s; }
+        .animate-district:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.3) 50%, 
+                rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
+                            0 0 10px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+                            0 0 30px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .glow-effect {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .district-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .district-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .district-card:hover::before {
+            opacity: 1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .city-expand {
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        /* EFEK TAMBAHAN SUPER KEREN */
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-20px) translateX(10px);
+                opacity: 1;
+            }
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% {
+                text-shadow: 0 0 5px rgba(59, 130, 246, 0.5),
+                            0 0 10px rgba(59, 130, 246, 0.3),
+                            0 0 15px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(59, 130, 246, 0.8),
+                            0 0 20px rgba(59, 130, 246, 0.6),
+                            0 0 30px rgba(59, 130, 246, 0.4);
+            }
+        }
+
+        .neon-text {
+            animation: neonPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes borderRun {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .border-animated {
+            position: relative;
+            background: linear-gradient(90deg, 
+                rgba(59, 130, 246, 0.5),
+                rgba(147, 51, 234, 0.5),
+                rgba(236, 72, 153, 0.5),
+                rgba(251, 146, 60, 0.5),
+                rgba(59, 130, 246, 0.5)
+            );
+            background-size: 200% 200%;
+            animation: borderRun 3s linear infinite;
+            padding: 2px;
+            border-radius: 1.5rem;
+        }
+
+        @keyframes float3D {
+            0%, 100% {
+                transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
+            }
+            66% {
+                transform: translateY(-5px) rotateX(-5deg) rotateY(5deg);
+            }
+        }
+
+        .float-3d {
+            animation: float3D 6s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        .ripple-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            animation: ripple 2s infinite;
+        }
+
+        .ripple-effect:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .ripple-effect:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .gradient-animated {
+            background: linear-gradient(
+                -45deg,
+                #667eea 0%,
+                #764ba2 25%,
+                #f093fb 50%,
+                #4facfe 75%,
+                #667eea 100%
+            );
+            background-size: 400% 400%;
+            animation: gradient-shift 8s ease infinite;
+        }
+
+        @keyframes textGlitch {
+            0% {
+                text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            14% {
+                text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            15% {
+                text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+                            0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            49% {
+                text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+                            0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            50% {
+                text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+                            0.05em 0 0 rgba(0, 255, 0, 0.75),
+                            0 -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            99% {
+                text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+                            0.05em 0 0 rgba(0, 255, 0, 0.75),
+                            0 -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            100% {
+                text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+        }
+
+        .glitch-hover:hover {
+            animation: textGlitch 0.3s infinite;
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        .scanline-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+            animation: scanline 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes colorChange {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .rainbow-effect {
+            animation: colorChange 10s linear infinite;
+        }
+
+        @keyframes spin3D {
+            from {
+                transform: rotateY(0deg);
+            }
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .spin-3d:hover {
+            animation: spin3D 1s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .shake-on-hover:hover {
+            animation: shake 0.5s;
+        }
+
+        .perspective-card {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .perspective-card:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+
+        @keyframes pulse3D {
+            0%, 100% {
+                transform: scale(1) translateZ(0);
+            }
+            50% {
+                transform: scale(1.05) translateZ(20px);
+            }
+        }
+
+        .pulse-3d {
+            animation: pulse3D 2s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 70%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        .wiggle-hover:hover {
+            animation: wiggle 0.5s ease-in-out infinite;
+        }
+
+        /* EFEK LEVEL MAKSIMAL - ULTIMATE EDITION */
+        @keyframes matrix-rain {
+            0% {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.1;
+        }
+
+        .matrix-char {
+            position: absolute;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            animation: matrix-rain linear infinite;
+        }
+
+        @keyframes holographic {
+            0%, 100% {
+                background-position: 0% 50%;
+                filter: hue-rotate(0deg) brightness(1);
+            }
+            50% {
+                background-position: 100% 50%;
+                filter: hue-rotate(30deg) brightness(1.2);
+            }
+        }
+
+        .holographic-card {
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 25%,
+                transparent 50%,
+                rgba(0, 255, 255, 0.05) 75%,
+                rgba(255, 0, 255, 0.1) 100%
+            );
+            background-size: 200% 200%;
+            animation: holographic 5s ease infinite;
+        }
+
+        @keyframes cyber-glitch {
+            0%, 100% {
+                clip-path: inset(0 0 0 0);
+            }
+            10% {
+                clip-path: inset(10% 0 85% 0);
+                transform: translate(-5px, 5px);
+            }
+            20% {
+                clip-path: inset(80% 0 15% 0);
+                transform: translate(5px, -5px);
+            }
+            30% {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        .cyber-glitch {
+            position: relative;
+        }
+
+        .cyber-glitch::before,
+        .cyber-glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .cyber-glitch::before {
+            animation: cyber-glitch 3s infinite;
+            color: #ff00ff;
+            z-index: -1;
+        }
+
+        .cyber-glitch::after {
+            animation: cyber-glitch 2.5s infinite reverse;
+            color: #00ffff;
+            z-index: -2;
+        }
+
+        @keyframes plasma {
+            0%, 100% {
+                background-position: 0% 0%;
+            }
+            25% {
+                background-position: 100% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            75% {
+                background-position: 0% 100%;
+            }
+        }
+
+        .plasma-effect {
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(0, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.3) 0%, transparent 50%);
+            background-size: 200% 200%;
+            animation: plasma 8s ease infinite;
+        }
+
+        @keyframes electric {
+            0%, 100% {
+                box-shadow: 
+                    0 0 5px rgba(0, 150, 255, 0.5),
+                    0 0 10px rgba(0, 150, 255, 0.4),
+                    0 0 15px rgba(0, 150, 255, 0.3),
+                    0 0 20px rgba(0, 150, 255, 0.2),
+                    inset 0 0 10px rgba(0, 150, 255, 0.2);
+            }
+            50% {
+                box-shadow: 
+                    0 0 10px rgba(0, 255, 255, 0.7),
+                    0 0 20px rgba(0, 255, 255, 0.5),
+                    0 0 30px rgba(0, 255, 255, 0.4),
+                    0 0 40px rgba(0, 255, 255, 0.3),
+                    inset 0 0 15px rgba(0, 255, 255, 0.3);
+            }
+        }
+
+        .electric-border {
+            animation: electric 2s ease-in-out infinite;
+        }
+
+        @keyframes morph {
+            0%, 100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            25% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+            }
+            50% {
+                border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+            }
+            75% {
+                border-radius: 60% 40% 60% 40% / 70% 30% 50% 60%;
+            }
+        }
+
+        .morph-shape {
+            animation: morph 8s ease-in-out infinite;
+        }
+
+        @keyframes constellation {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 3px white;
+            animation: constellation 3s ease-in-out infinite;
+        }
+
+        @keyframes lightning {
+            0%, 100% {
+                opacity: 0;
+            }
+            5%, 15%, 25% {
+                opacity: 1;
+            }
+            10%, 20% {
+                opacity: 0.3;
+            }
+        }
+
+        .lightning-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+            animation: lightning 6s infinite;
+            z-index: 999;
+        }
+
+        @keyframes data-stream {
+            0% {
+                transform: translateY(-100%) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        .data-stream {
+            position: absolute;
+            color: rgba(59, 130, 246, 0.5);
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            animation: data-stream 8s linear infinite;
+        }
+
+        @keyframes quantum {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            25% {
+                transform: scale(1.2) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(0.8) rotate(180deg);
+                opacity: 1;
+            }
+            75% {
+                transform: scale(1.1) rotate(270deg);
+                opacity: 0.7;
+            }
+        }
+
+        .quantum-particle {
+            animation: quantum 4s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+
+        @keyframes warp-speed {
+            0% {
+                transform: scaleX(0) translateX(-50%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scaleX(100) translateX(50%);
+                opacity: 0;
+            }
+        }
+
+        .warp-line {
+            position: absolute;
+            height: 1px;
+            width: 200px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.8), transparent);
+            animation: warp-speed 2s linear infinite;
+        }
+
+        @keyframes aurora {
+            0%, 100% {
+                background-position: 0% 50%;
+                filter: blur(50px) brightness(1);
+            }
+            25% {
+                background-position: 25% 75%;
+                filter: blur(60px) brightness(1.2);
+            }
+            50% {
+                background-position: 50% 100%;
+                filter: blur(70px) brightness(0.9);
+            }
+            75% {
+                background-position: 75% 25%;
+                filter: blur(60px) brightness(1.1);
+            }
+        }
+
+        .aurora-bg {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 30% 50%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 50%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(236, 72, 153, 0.2) 0%, transparent 50%);
+            animation: aurora 20s ease infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes typewriter {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 3s steps(40) infinite;
+        }
+
+        @keyframes pixel-expand {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .pixel-art {
+            animation: pixel-expand 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes cosmic-dust {
+            0% {
+                transform: translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(1000px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .cosmic-dust {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: cosmic-dust 15s linear infinite;
+        }
+
+        .glass-reflection {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-reflection::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 70%
+            );
+            transform: rotate(45deg);
+            animation: shine 4s infinite;
+        }
+
+        @keyframes neon-flicker {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px #fff,
+                    0 0 20px #fff,
+                    0 0 30px #3b82f6,
+                    0 0 40px #3b82f6,
+                    0 0 70px #3b82f6,
+                    0 0 80px #3b82f6;
+            }
+            10%, 20% {
+                text-shadow: none;
+            }
+        }
+
+        .neon-flicker {
+            animation: neon-flicker 0.15s infinite alternate;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+    <!-- ULTIMATE BACKGROUND EFFECTS -->
+    <div class="aurora-bg"></div>
+    <div class="lightning-flash"></div>
+    
+    <!-- Matrix Rain Effect -->
+    <div class="matrix-bg" id="matrix-container"></div>
+    
+    <!-- Cosmic Dust -->
+    <div class="fixed inset-0 pointer-events-none z-0" id="cosmic-container"></div>
+    
+    <!-- Warp Speed Lines -->
+    <div class="fixed inset-0 pointer-events-none z-0" id="warp-container"></div>
+    
+    <!-- Stars Constellation -->
+    <div class="fixed inset-0 pointer-events-none z-0" id="stars-container"></div>
+    
+    <div class="fixed inset-0 -z-10">
+        <img src="imigrasi.jpg" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-900/80 to-purple-900/80 plasma-effect"></div>
+    </div>
+    
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-800 to-blue-900 border-b-4 border-yellow-500 shadow-2xl">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-2xl p-1 pulse-slow">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center overflow-hidden">
+                            <img src="logo imigrasi.png" alt="Logo" class="w-14 h-14 object-contain">
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white tracking-wide">Sistem Intelejen Imigrasi</h1>
+                        <p class="text-blue-200 text-sm">Kantor Imigrasi Kelas I TPI Tanjungpinang</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-5">
+                    <div class="text-right">
+                        <p class="text-white font-semibold leading-tight text-sm">Kepala Seksi</p>
+                        <p class="text-yellow-300 font-bold leading-tight text-lg">INTELDALKIM</p>
+                    </div>
+                    <div class="w-20 h-20 rounded-full p-1 bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-2xl pulse-slow">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <img src="LOGO_IMIGRASI.png" alt="Logo Imigrasi" class="w-14 h-14 object-contain">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-blue-950 shadow-lg border-b border-blue-800">
+        <div class="container mx-auto px-6">
+            <div class="flex space-x-1">
+                <button onclick="showPage('dashboard')" id="nav-dashboard" class="nav-btn flex items-center space-x-2 px-6 py-4 font-semibold transition-all duration-200 bg-blue-700 text-white border-b-4 border-yellow-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="showPage('input')" id="nav-input" class="nav-btn flex items-center space-x-2 px-6 py-4 font-semibold transition-all duration-200 text-blue-300 hover:bg-blue-800 hover:text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Input Data</span>
+                </button>
+                <button onclick="showPage('data')" id="nav-data" class="nav-btn flex items-center space-x-2 px-6 py-4 font-semibold transition-all duration-200 text-blue-300 hover:bg-blue-800 hover:text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Database</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        
+        <!-- Dashboard Page -->
+        <div id="page-dashboard" class="page-content">
+            <div class="space-y-8">
+                <!-- Statistics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card glass-effect rounded-2xl shadow-2xl p-6 card-hover fade-in perspective-card float-3d">
+                        <div class="flex items-center justify-between relative z-10">
+                            <div>
+                                <p class="text-4xl font-bold text-blue-600 neon-text" id="stat-total">0</p>
+                                <p class="text-sm text-gray-600 font-semibold mt-2">Total Data</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-2xl float spin-3d">
+                                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 opacity-20 pointer-events-none">
+                            <div class="ripple-effect"></div>
+                            <div class="ripple-effect"></div>
+                            <div class="ripple-effect"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-effect rounded-2xl shadow-2xl p-6 card-hover fade-in perspective-card float-3d" style="animation-delay: 0.1s">
+                        <div class="flex items-center justify-between relative z-10">
+                            <div>
+                                <p class="text-4xl font-bold text-green-600 glitch-hover" id="stat-wni">0</p>
+                                <p class="text-sm text-gray-600 font-semibold mt-2">WNI</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-2xl float wiggle-hover">
+                                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 opacity-20 pointer-events-none">
+                            <div class="ripple-effect"></div>
+                            <div class="ripple-effect"></div>
+                            <div class="ripple-effect"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-effect rounded-2xl shadow-2xl p-6 card-hover fade-in perspective-card float-3d rainbow-effect" style="animation-delay: 0.2s">
+                        <div class="flex items-center justify-between relative z-10">
+                            <div>
+                                <p class="text-4xl font-bold text-purple-600 shake-on-hover" id="stat-wna">0</p>
+                                <p class="text-sm text-gray-600 font-semibold mt-2">WNA</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-2xl float pulse-3d">
+                                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 opacity-20 pointer-events-none">
+                            <div class="ripple-effect"></div>
+                            <div class="ripple-effect"></div>
+                            <div class="ripple-effect"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-effect rounded-2xl shadow-2xl p-6 card-hover fade-in perspective-card float-3d gradient-animated" style="animation-delay: 0.3s">
+                        <div class="flex items-center justify-between relative z-10">
+                            <div>
+                                <p class="text-4xl font-bold text-orange-600" id="stat-kota">2</p>
+                                <p class="text-sm text-gray-600 font-semibold mt-2">Wilayah</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-orange-500 to-orange-600 p-4 rounded-2xl float">
+                                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 opacity-20 pointer-events-none">
+                            <div class="ripple-effect"></div>
+                            <div class="ripple-effect"></div>
+                            <div class="ripple-effect"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wilayah Cards -->
+                <div class="glass-effect rounded-3xl shadow-2xl p-8 border-t-4 border-blue-600 slide-in scanline-effect relative">
+                    <div class="particles pointer-events-none absolute inset-0">
+                        <div class="particle" style="width: 4px; height: 4px; left: 10%; top: 20%; animation-delay: 0s;"></div>
+                        <div class="particle" style="width: 6px; height: 6px; left: 30%; top: 40%; animation-delay: 1s;"></div>
+                        <div class="particle" style="width: 3px; height: 3px; left: 60%; top: 60%; animation-delay: 2s;"></div>
+                        <div class="particle" style="width: 5px; height: 5px; left: 80%; top: 30%; animation-delay: 1.5s;"></div>
+                        <div class="particle" style="width: 4px; height: 4px; left: 50%; top: 80%; animation-delay: 0.5s;"></div>
+                        <div class="particle" style="width: 7px; height: 7px; left: 20%; top: 70%; animation-delay: 2.5s;"></div>
+                    </div>
+                    <div class="flex items-center justify-between mb-6 relative z-10">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 glitch-hover">Peta Wilayah Kerja Imigrasi</h2>
+                            <p class="text-gray-600 mt-1">Klik kartu untuk melihat detail data per wilayah</p>
+                        </div>
+                        <div class="border-animated">
+                            <div class="bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 rounded-xl">
+                                <p class="text-white font-bold text-lg">Kepulauan Riau</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Tanjungpinang -->
+                        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-xl overflow-hidden card-hover">
+                            <button onclick="toggleCity('tanjungpinang')" class="w-full p-6 text-white text-left">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="bg-white/20 p-3 rounded-xl">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-2xl font-bold">Tanjungpinang</p>
+                                            <p class="text-emerald-100 text-sm">Kota</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white text-emerald-600 px-4 py-2 rounded-full font-bold text-lg" id="count-tanjungpinang">0</div>
+                                </div>
+                                <div class="bg-white/10 rounded-xl p-4">
+                                    <p class="text-sm text-emerald-100">Total Data Tercatat</p>
+                                </div>
+                            </button>
+                            
+                            <div id="city-tanjungpinang" class="bg-white p-6 hidden city-expand">
+                                <div class="grid grid-cols-2 gap-3" id="districts-tanjungpinang"></div>
+                            </div>
+                        </div>
+
+                        <!-- Bintan -->
+                        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-xl overflow-hidden card-hover">
+                            <button onclick="toggleCity('bintan')" class="w-full p-6 text-white text-left">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="bg-white/20 p-3 rounded-xl">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-2xl font-bold">Bintan</p>
+                                            <p class="text-blue-100 text-sm">Kabupaten</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white text-blue-600 px-4 py-2 rounded-full font-bold text-lg" id="count-bintan">0</div>
+                                </div>
+                                <div class="bg-white/10 rounded-xl p-4">
+                                    <p class="text-sm text-blue-100">Total Data Tercatat</p>
+                                </div>
+                            </button>
+                            
+                            <div id="city-bintan" class="bg-white p-6 hidden city-expand">
+                                <div class="grid grid-cols-2 gap-3" id="districts-bintan"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Page -->
+        <div id="page-input" class="page-content hidden">
+            <div class="glass-effect rounded-3xl shadow-2xl p-8 border-t-4 border-green-600 fade-in">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6" id="form-title">Input Data Baru</h2>
+                <form id="data-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
+                            <input type="text" id="nama" name="nama" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor Paspor <span class="text-red-500">*</span></label>
+                            <input type="text" id="paspor" name="paspor" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Status <span class="text-red-500">*</span></label>
+                            <select id="status" name="status" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                                <option value="">Pilih</option>
+                                <option value="WNI">WNI</option>
+                                <option value="WNA">WNA</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Penjamin <span class="text-red-500">*</span></label>
+                            <input type="text" id="penjamin" name="penjamin" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tempat Lahir <span class="text-red-500">*</span></label>
+                            <input type="text" id="tempatLahir" name="tempatLahir" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
+                            <input type="date" id="tanggalLahir" name="tanggalLahir" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
+                            <select id="jenisKelamin" name="jenisKelamin" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                                <option value="">Pilih</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kota/Kabupaten <span class="text-red-500">*</span></label>
+                            <select id="kota" name="kota" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                                <option value="">Pilih Kota</option>
+                                <option value="Tanjungpinang">Tanjungpinang</option>
+                                <option value="Bintan">Bintan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kecamatan <span class="text-red-500">*</span></label>
+                            <select id="kecamatan" name="kecamatan" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                                <option value="">Pilih Kecamatan</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kelurahan/Desa <span class="text-gray-400">(Opsional)</span></label>
+                            <input type="text" id="kelurahan" name="kelurahan" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap <span class="text-gray-400">(Opsional)</span></label>
+                            <textarea id="alamat" name="alamat" rows="3" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"></textarea>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+                            <span id="submit-text">Simpan Data</span>
+                        </button>
+                        <button type="button" id="cancel-btn" onclick="cancelEdit()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 hidden">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Database Page -->
+        <div id="page-data" class="page-content hidden">
+            <div class="glass-effect rounded-3xl shadow-2xl p-8 border-t-4 border-purple-600 fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Database Intelijen</h2>
+                    <button onclick="exportCSV()" class="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span>Export CSV</span>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="relative">
+                        <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" stroke-width="2"/>
+                            <path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <input type="text" id="search-input" onkeyup="searchData()" placeholder="Cari berdasarkan nama, paspor, atau kota..." class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl">
+                    <table class="w-full">
+                        <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                            <tr>
+                                <th class="px-4 py-4 text-left font-bold rounded-tl-xl">No</th>
+                                <th class="px-4 py-4 text-left font-bold">Nama</th>
+                                <th class="px-4 py-4 text-left font-bold">Paspor</th>
+                                <th class="px-4 py-4 text-left font-bold">Status</th>
+                                <th class="px-4 py-4 text-left font-bold">Kota</th>
+                                <th class="px-4 py-4 text-left font-bold">Kecamatan</th>
+                                <th class="px-4 py-4 text-center font-bold rounded-tr-xl">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table-body"></tbody>
+                    </table>
+                    <div id="no-data" class="text-center py-12 text-gray-500 hidden">
+                        <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <p class="text-lg font-semibold">Tidak ada data ditemukan</p>
+                        <p class="text-sm">Coba ubah kata kunci pencarian Anda</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Detail -->
+    <div id="modal-detail" class="fixed inset-0 modal-overlay flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto fade-in">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 sticky top-0 rounded-t-3xl">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">Detail Data Subjek</h3>
+                    <button onclick="closeModal()" class="bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full p-2 transition-all duration-200">
+                        <span class="text-2xl leading-none">×</span>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6 space-y-6" id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-blue-900 to-blue-950 text-white py-6 mt-12 border-t-2 border-yellow-500">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-semibold">Sistem Informasi Intelijen Keamanan Wilayah</p>
+            <p class="text-sm text-blue-200 mt-1">Kantor Imigrasi - Kepala Seksi INTELDALKIM</p>
+            <p class="text-xs text-blue-300 mt-2">© 2025 - Kantor Imigrasi Kelas I TPI Tanjungpinang</p>
+        </div>
+    </footer>
+
+    <script>
+        let dataList = [];
+        let editingId = null;
+
+        const regions = {
+            'Tanjungpinang': ['Tanjungpinang Kota', 'Tanjungpinang Barat', 'Tanjungpinang Timur', 'Bukit Bestari'],
+            'Bintan': ['Teluk Bintan', 'Bintan Timur', 'Gunung Kijang']
+        };
+
+        // INITIALIZE ULTIMATE EFFECTS
+        function initUltimateEffects() {
+            // Matrix Rain
+            const matrixContainer = document.getElementById('matrix-container');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            for (let i = 0; i < 50; i++) {
+                const char = document.createElement('div');
+                char.className = 'matrix-char';
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                char.style.left = Math.random() * 100 + '%';
+                char.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                char.style.animationDelay = Math.random() * 2 + 's';
+                matrixContainer.appendChild(char);
+            }
+
+            // Cosmic Dust
+            const cosmicContainer = document.getElementById('cosmic-container');
+            for (let i = 0; i < 20; i++) {
+                const dust = document.createElement('div');
+                dust.className = 'cosmic-dust';
+                dust.style.top = Math.random() * 100 + '%';
+                dust.style.left = -10 + 'px';
+                dust.style.animationDelay = Math.random() * 5 + 's';
+                cosmicContainer.appendChild(dust);
+            }
+
+            // Warp Speed Lines
+            const warpContainer = document.getElementById('warp-container');
+            for (let i = 0; i < 10; i++) {
+                const line = document.createElement('div');
+                line.className = 'warp-line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.left = Math.random() * 100 + '%';
+                line.style.animationDelay = Math.random() * 2 + 's';
+                warpContainer.appendChild(line);
+            }
+
+            // Stars Constellation
+            const starsContainer = document.getElementById('stars-container');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('dataIntelijen');
+            if (saved) {
+                dataList = JSON.parse(saved);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('dataIntelijen', JSON.stringify(dataList));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initUltimateEffects();
+            loadData();
+            renderDistrictCards();
+            renderTable();
+            updateStatistics();
+            setupKotaListener();
+        });
+
+        function showPage(page) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-700', 'text-white', 'border-b-4', 'border-yellow-500');
+                btn.classList.add('text-blue-300');
+            });
+
+            document.getElementById('page-' + page).classList.remove('hidden');
+            document.getElementById('nav-' + page).classList.add('bg-blue-700', 'text-white', 'border-b-4', 'border-yellow-500');
+            document.getElementById('nav-' + page).classList.remove('text-blue-300');
+
+            if (page === 'data') {
+                document.getElementById('search-input').value = '';
+                renderTable(dataList);
+            }
+        }
+
+        function toggleCity(city) {
+            const content = document.getElementById('city-' + city);
+            content.classList.toggle('hidden');
+        }
+
+        function renderDistrictCards() {
+            Object.keys(regions).forEach(city => {
+                const container = document.getElementById('districts-' + city.toLowerCase());
+                container.innerHTML = '';
+                
+                regions[city].forEach((district, idx) => {
+                    const count = dataList.filter(item => item.kota === city && item.kecamatan === district).length;
+                    const card = document.createElement('button');
+                    card.onclick = () => filterByDistrict(city, district);
+                    
+                    // ANIMASI KEREN - Random untuk setiap kartu
+                    card.className = 'district-card bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white p-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-110 hover:rotate-2 glow-effect animate-district';
+                    
+                    card.innerHTML = `
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="bg-white/20 p-2 rounded-lg shimmer">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-width="2"/>
+                                        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                                <div class="bg-white text-orange-600 px-3 py-1 rounded-full text-sm font-bold shadow-lg transform transition-transform hover:scale-110">
+                                    ${count}
+                                </div>
+                            </div>
+                            <p class="font-bold text-left text-sm mb-1">${district}</p>
+                            <div class="w-full h-1 bg-white/30 rounded-full overflow-hidden">
+                                <div class="h-full bg-white rounded-full shimmer" style="width: ${Math.min(count * 20, 100)}%"></div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Delay animasi per kartu
+                    card.style.animationDelay = `${idx * 0.1}s`;
+                    container.appendChild(card);
+                });
+
+                const totalCity = dataList.filter(item => item.kota === city).length;
+                document.getElementById('count-' + city.toLowerCase()).textContent = totalCity;
+            });
+        }
+
+        function filterByDistrict(city, district) {
+            const filtered = dataList.filter(d => d.kota === city && d.kecamatan === district);
+            showPage('data');
+            renderTable(filtered);
+        }
+
+        function setupKotaListener() {
+            document.getElementById('kota').addEventListener('change', function() {
+                const kota = this.value;
+                const kecamatanSelect = document.getElementById('kecamatan');
+                kecamatanSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                
+                if (kota && regions[kota]) {
+                    regions[kota].forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district;
+                        option.textContent = district;
+                        kecamatanSelect.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        document.getElementById('data-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                nama: document.getElementById('nama').value,
+                paspor: document.getElementById('paspor').value,
+                status: document.getElementById('status').value,
+                penjamin: document.getElementById('penjamin').value,
+                tempatLahir: document.getElementById('tempatLahir').value,
+                tanggalLahir: document.getElementById('tanggalLahir').value,
+                jenisKelamin: document.getElementById('jenisKelamin').value,
+                kota: document.getElementById('kota').value,
+                kecamatan: document.getElementById('kecamatan').value,
+                kelurahan: document.getElementById('kelurahan').value,
+                alamat: document.getElementById('alamat').value
+            };
+
+            if (editingId) {
+                const index = dataList.findIndex(item => item.id === editingId);
+                dataList[index] = { ...formData, id: editingId };
+                editingId = null;
+            } else {
+                formData.id = Date.now();
+                dataList.push(formData);
+            }
+
+            saveData();
+            resetForm();
+            renderTable();
+            renderDistrictCards();
+            updateStatistics();
+            showPage('data');
+            alert('Data berhasil disimpan!');
+        });
+
+        function resetForm() {
+            document.getElementById('data-form').reset();
+            document.getElementById('form-title').textContent = 'Input Data Baru';
+            document.getElementById('submit-text').textContent = 'Simpan Data';
+            document.getElementById('cancel-btn').classList.add('hidden');
+            editingId = null;
+        }
+
+        function cancelEdit() {
+            resetForm();
+        }
+
+        function renderTable(filteredList = null) {
+            const list = filteredList || dataList;
+            const tbody = document.getElementById('data-table-body');
+            const noData = document.getElementById('no-data');
+            
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                noData.classList.remove('hidden');
+                return;
+            }
+
+            noData.classList.add('hidden');
+
+            list.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.className = `border-b hover:bg-blue-50 transition-colors ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`;
+                
+                let statusClass = item.status === 'WNI' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700';
+                
+                row.innerHTML = `
+                    <td class="px-4 py-4">${index + 1}</td>
+                    <td class="px-4 py-4 font-semibold">${item.nama}</td>
+                    <td class="px-4 py-4 font-mono text-sm">${item.paspor}</td>
+                    <td class="px-4 py-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${statusClass}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td class="px-4 py-4">${item.kota}</td>
+                    <td class="px-4 py-4">${item.kecamatan}</td>
+                    <td class="px-4 py-4">
+                        <div class="flex justify-center space-x-2">
+                            <button onclick="viewDetail(${item.id})" class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition-all duration-200" title="Lihat Detail">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"/>
+                                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2"/>
+                                </svg>
+                            </button>
+                            <button onclick="editData(${item.id})" class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-all duration-200" title="Edit">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/>
+                                </svg>
+                            </button>
+                            <button onclick="deleteData(${item.id})" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-all duration-200" title="Hapus">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function searchData() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const filtered = dataList.filter(item =>
+                item.nama.toLowerCase().includes(searchTerm) ||
+                item.paspor.toLowerCase().includes(searchTerm) ||
+                item.kota.toLowerCase().includes(searchTerm) ||
+                item.kecamatan.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filtered);
+        }
+
+        function editData(id) {
+            const item = dataList.find(d => d.id === id);
+            if (!item) return;
+
+            editingId = id;
+            document.getElementById('nama').value = item.nama;
+            document.getElementById('paspor').value = item.paspor;
+            document.getElementById('status').value = item.status;
+            document.getElementById('penjamin').value = item.penjamin;
+            document.getElementById('tempatLahir').value = item.tempatLahir;
+            document.getElementById('tanggalLahir').value = item.tanggalLahir;
+            document.getElementById('jenisKelamin').value = item.jenisKelamin;
+            document.getElementById('kota').value = item.kota;
+            
+            document.getElementById('kota').dispatchEvent(new Event('change'));
+            setTimeout(() => {
+                document.getElementById('kecamatan').value = item.kecamatan;
+            }, 100);
+            
+            document.getElementById('kelurahan').value = item.kelurahan || '';
+            document.getElementById('alamat').value = item.alamat || '';
+
+            document.getElementById('form-title').textContent = 'Edit Data';
+            document.getElementById('submit-text').textContent = 'Update Data';
+            document.getElementById('cancel-btn').classList.remove('hidden');
+
+            showPage('input');
+        }
+
+        function deleteData(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                dataList = dataList.filter(item => item.id !== id);
+                saveData();
+                renderTable();
+                renderDistrictCards();
+                updateStatistics();
+                alert('Data berhasil dihapus!');
+            }
+        }
+
+        function viewDetail(id) {
+            const item = dataList.find(d => d.id === id);
+            if (!item) return;
+
+            let statusClass = item.status === 'WNI' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700';
+
+            const content = `
+                <div class="border-b-2 border-gray-200 pb-4">
+                    <h4 class="text-lg font-bold text-gray-700 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-width="2"/>
+                        </svg>
+                        Data Identitas
+                    </h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><p class="text-sm text-gray-500">Nama Lengkap</p><p class="font-semibold text-gray-800">${item.nama}</p></div>
+                        <div><p class="text-sm text-gray-500">Nomor Paspor</p><p class="font-semibold text-gray-800">${item.paspor}</p></div>
+                        <div><p class="text-sm text-gray-500">Status</p><span class="inline-block px-3 py-1 rounded-full text-xs font-bold ${statusClass}">${item.status}</span></div>
+                        <div><p class="text-sm text-gray-500">Penjamin</p><p class="font-semibold text-gray-800">${item.penjamin}</p></div>
+                        <div><p class="text-sm text-gray-500">Tempat Lahir</p><p class="font-semibold text-gray-800">${item.tempatLahir}</p></div>
+                        <div><p class="text-sm text-gray-500">Tanggal Lahir</p><p class="font-semibold text-gray-800">${item.tanggalLahir}</p></div>
+                        <div><p class="text-sm text-gray-500">Jenis Kelamin</p><p class="font-semibold text-gray-800">${item.jenisKelamin}</p></div>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-gray-200 pb-4">
+                    <h4 class="text-lg font-bold text-gray-700 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-width="2"/>
+                            <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"/>
+                        </svg>
+                        Data Alamat
+                    </h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><p class="text-sm text-gray-500">Kota/Kabupaten</p><p class="font-semibold text-gray-800">${item.kota}</p></div>
+                        <div><p class="text-sm text-gray-500">Kecamatan</p><p class="font-semibold text-gray-800">${item.kecamatan}</p></div>
+                        <div><p class="text-sm text-gray-500">Kelurahan/Desa</p><p class="font-semibold text-gray-800">${item.kelurahan || '-'}</p></div>
+                        <div class="col-span-2"><p class="text-sm text-gray-500">Alamat Lengkap</p><p class="font-semibold text-gray-800">${item.alamat || '-'}</p></div>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button onclick="editData(${item.id}); closeModal();" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300">
+                        Edit Data
+                    </button>
+                    <button onclick="closeModal()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300">
+                        Tutup
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('modal-detail').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-detail').classList.add('hidden');
+        }
+
+        function updateStatistics() {
+            document.getElementById('stat-total').textContent = dataList.length;
+            document.getElementById('stat-wni').textContent = dataList.filter(d => d.status === 'WNI').length;
+            document.getElementById('stat-wna').textContent = dataList.filter(d => d.status === 'WNA').length;
+        }
+
+        function exportCSV() {
+            const headers = ['Nama', 'Paspor', 'Status', 'Penjamin', 'Tempat Lahir', 'Tanggal Lahir', 'Jenis Kelamin', 'Kota', 'Kecamatan', 'Kelurahan', 'Alamat'];
+            const rows = dataList.map(d => [
+                d.nama, d.paspor, d.status, d.penjamin, d.tempatLahir, d.tanggalLahir, d.jenisKelamin, d.kota, d.kecamatan, d.kelurahan || '', d.alamat || ''
+            ]);
+            
+            const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data-intelijen-imigrasi.csv';
+            a.click();
+        }
+    </script>
+</body> 
+</html> 
