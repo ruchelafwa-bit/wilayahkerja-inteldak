@@ -11,6 +11,21 @@ if (localStorage.getItem('index') !== 'true') {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Wilayah Kerja Intelijen dan Penindakan Keimigrasian - Tanjungpinang</title>
         <script src="https://cdn.tailwindcss.com"></script>
+            <script>
+        // Cek apakah user sudah login
+        if (localStorage.getItem('login') !== 'true') {
+            // Jika belum login, redirect ke index.html
+            window.location.href = 'index.html';
+        }
+        
+        // Fungsi logout
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                localStorage.clear(); // Hapus semua data login
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
         <style>
             .logo-glass {
     width: 64px;
@@ -1267,3 +1282,4 @@ inactivityTime();
     </body>
 
     </html>     
+
