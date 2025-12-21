@@ -838,19 +838,40 @@ const regions = {
 
 async function loadData() {
     try {
-        const response = await fetch(API_BASE + 'get_data.php');
+        console.log('🔄 Loading data via proxy...');
+        
+        const response = await fetch(API_BASE + 'get_data.php', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        console.log('📡 Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
         const result = await response.json();
+        console.log('✅ Data received:', result);
         
         if (result.success) {
-            dataList = result.data;
-            console.log('✅ Data loaded:', dataList.length, 'records');
+            dataList = result.data || [];
+            console.log('✅ Total records:', dataList.length);
+            renderTable();
+            renderDistrictCards();
+            updateStatistics();
         } else {
-            console.error('❌ Failed to load data:', result.message);
-            alert('⚠️ Gagal memuat data dari server');
+            throw new Error(result.message);
         }
+        
     } catch (error) {
-        console.error('❌ Error loading data:', error);
-        alert('⚠️ Koneksi ke server bermasalah. Pastikan XAMPP Apache & MySQL sudah running!');
+        console.error('❌ Error:', error);
+        alert('⚠️ Gagal memuat data: ' + error.message);
+        dataList = [];
+        renderTable();
+        updateStatistics();
     }
 }
 
@@ -1273,6 +1294,7 @@ function exportCSV() {
     </body>
 
     </html>     
+
 
 
 
